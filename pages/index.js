@@ -1,35 +1,45 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
-export default function Home() {
+const Home = () => {
   const [file, setFile] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const uploadFile = async () => {
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await fetch('http://localhost:3001/upload', {
+    await fetch('http://localhost:3001/upload', {
       method: 'POST',
       body: formData,
+    }).then(response => {
+      if (response.ok) {
+        alert('Archivo subido exitosamente.');
+      } else {
+        alert('Error al subir el archivo.');
+      }
     });
+  };
 
-    if (response.ok) {
-      alert('Archivo subido exitosamente!');
-    } else {
-      alert('Error al subir el archivo.');
-    }
+  const deleteFile = async (filename) => {
+    await fetch(`http://localhost:3001/delete/${filename}`, {
+      method: 'DELETE',
+    }).then(response => {
+      if (response.ok) {
+        alert('Archivo eliminado exitosamente.');
+      } else {
+        alert('Error al eliminar el archivo.');
+      }
+    });
   };
 
   return (
     <div>
-      <h1>Sube tu archivo</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="file"
-          onChange={(e) => setFile(e.target.files[0])}
-        />
-        <button type="submit">Subir</button>
-      </form>
+      <h1>Subir Archivo</h1>
+      <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+      <button onClick={uploadFile}>Cargar Archivo</button>
+      {/* Eliminar archivo - reemplaza 'nombre_del_archivo' con el archivo deseado */}
+      <button onClick={() => deleteFile('nombre_del_archivo')}>Eliminar Archivo</button>
     </div>
   );
-}
+};
+
+export default Home;

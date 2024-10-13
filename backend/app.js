@@ -3,21 +3,26 @@ const multer = require('multer');
 const path = require('path');
 
 const app = express();
-const port = 3001; // Cambia el puerto si es necesario
+const port = 3001;
 
-// Configurar Multer para guardar los archivos subidos
+// Ruta para el mensaje de bienvenida
+app.get('/', (req, res) => {
+  res.send('Bienvenido al backend de la TO-DO LIST');
+});
+
+// Configuración de Multer para cargar archivos (si es necesario)
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Carpeta donde se guardarán los archivos subidos
+    cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Renombrar archivo con la fecha actual
+    cb(null, Date.now() + path.extname(file.originalname));
   },
 });
 
 const upload = multer({ storage: storage });
 
-// Ruta para manejar la subida de archivos
+// Ruta para subir archivos
 app.post('/upload', upload.single('file'), (req, res) => {
   if (!req.file) {
     return res.status(400).send('Error al subir el archivo.');
@@ -25,13 +30,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
   res.send('Archivo subido exitosamente.');
 });
 
-// Nueva ruta para la raíz
-app.get('/', (req, res) => {
-  res.send('Bienvenido a la API de subida de archivos!'); // Mensaje de bienvenida
-});
-
-// Iniciar el servidor
+// Iniciar servidor
 app.listen(port, () => {
-  console.log(`Servidor backend ejecutándose en http://localhost:${port}`);
+  console.log(`Servidor ejecutándose en http://localhost:${port}`);
 });
-
