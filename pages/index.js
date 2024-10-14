@@ -7,6 +7,7 @@ const Home = () => {
     const formData = new FormData();
     formData.append('file', file);
 
+    // Corregir la sintaxis aquí: agrega un espacio entre `await` y `fetch`
     await fetch('http://localhost:3001/upload', {
       method: 'POST',
       body: formData,
